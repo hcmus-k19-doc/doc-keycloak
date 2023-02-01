@@ -1,6 +1,5 @@
 package edu.hcmus.doc;
 
-import edu.hcmus.doc.model.DocUser;
 import edu.hcmus.doc.service.DocClientSimpleHttp;
 import edu.hcmus.doc.service.DocUserClient;
 import java.util.Map;
@@ -53,37 +52,39 @@ public class DocUserStorageProvider implements
             return false;
         }
         UserCredentialModel cred = (UserCredentialModel) input;
-        return repository.validateCredentials(user.getUsername(), cred.getChallengeResponse());
+        return client.validateCredentialsByUserId(StorageId.externalId(user.getId()), cred.getChallengeResponse());
     }
 
     @Override
     public void close() {
+        // TODO add body later
     }
 
     @Override
     public UserModel getUserById(RealmModel realm, String id) {
-        return new UserAdapter(session, realm, model, client.getUserById(StorageId.externalId(id)));
+        return client
+            .getUserById(StorageId.externalId(id))
+            .map(user -> new UserAdapter(session, realm, model, user))
+            .orElse(null);
     }
 
     @Override
     public UserModel getUserByUsername(RealmModel realm, String username) {
-        DocUser user = client.getUsers().stream()
-            .filter(u -> u.getUsername().equalsIgnoreCase(username) || u.getEmail().equalsIgnoreCase(username))
-            .findFirst().orElse(null);
-        if (user != null) {
-            return new UserAdapter(session, realm, model, user);
-        }
-        return null;
+        return client.getUserByUsername(username)
+            .map(user -> new UserAdapter(session, realm, model, user))
+            .orElse(null);
     }
 
     @Override
     public UserModel getUserByEmail(RealmModel realm, String email) {
-        return getUserByUsername(realm, email);
+        return client.getUserByEmail(email)
+            .map(user -> new UserAdapter(session, realm, model, user))
+            .orElse(null);
     }
 
     @Override
     public int getUsersCount(RealmModel realm) {
-        return client.getUsers().size();
+        return client.getTotalUsers();
     }
 
     @Override

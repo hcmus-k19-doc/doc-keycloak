@@ -15,6 +15,6 @@ public class DocUserStorageProviderFactory implements UserStorageProviderFactory
 
     @Override
     public String getId() {
-        return "doc-user-provider";
+        return "DOC";
     }
 }

@@ -18,20 +18,6 @@ class DemoRepository {
         return users;
     }
 
-    int getUsersCount() {
-        return users.size();
-    }
-
-    DocUser findUserById(String id) {
-        return users.stream().filter(user -> user.getId().equals(id)).findFirst().orElse(null);
-    }
-
-    DocUser findUserByUsernameOrEmail(String username) {
-        return users.stream()
-                .filter(user -> user.getUsername().equalsIgnoreCase(username) || user.getEmail().equalsIgnoreCase(username))
-                .findFirst().orElse(null);
-    }
-
     List<DocUser> findUsers(String query) {
         return "*".equals(query)
             ? users
@@ -40,13 +26,4 @@ class DemoRepository {
                     user -> user.getUsername().contains(query) || user.getEmail().contains(query))
                 .collect(toList());
     }
-
-    boolean validateCredentials(String username, String password) {
-        return true;
-    }
-
-    boolean updateCredentials(String username, String password) {
-        return true;
-    }
-
 }
