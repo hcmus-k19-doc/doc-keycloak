@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @Consumes(APPLICATION_JSON)
@@ -17,7 +18,10 @@ import javax.ws.rs.core.MediaType;
 public interface DocUserClient {
 
   @GET
-  List<DocUser> getUsers();
+  List<DocUser> getUsers(@QueryParam("query") String query);
+
+  @GET
+  List<DocUser> getUsers(@QueryParam("query") String query, @QueryParam("first") Integer first, @QueryParam("max") Integer max);
 
   @GET
   @Path("/{id}")

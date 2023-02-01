@@ -26,14 +26,12 @@ public class DocUserStorageProvider implements
 
     private final KeycloakSession session;
     private final ComponentModel model;
-    private final DemoRepository repository;
     private final DocUserClient client;
 
     public DocUserStorageProvider(KeycloakSession session, ComponentModel model) {
         this.session = session;
         this.model = model;
         this.client = new DocClientSimpleHttp(session);
-        this.repository = new DemoRepository(client);
     }
 
     @Override
@@ -56,14 +54,11 @@ public class DocUserStorageProvider implements
     }
 
     @Override
-    public void close() {
-        // TODO add body later
-    }
+    public void close() { /* Leave this empty */ }
 
     @Override
     public UserModel getUserById(RealmModel realm, String id) {
-        return client
-            .getUserById(StorageId.externalId(id))
+        return client.getUserById(StorageId.externalId(id))
             .map(user -> new UserAdapter(session, realm, model, user))
             .orElse(null);
     }
@@ -89,19 +84,23 @@ public class DocUserStorageProvider implements
 
     @Override
     public Stream<UserModel> searchForUserStream(RealmModel realm, String search) {
-        return repository.findUsers(search).stream()
-                .map(user -> new UserAdapter(session, realm, model, user));
+        return client.getUsers("*".equals(search) ? null : search)
+            .stream()
+            .map(user -> new UserAdapter(session, realm, model, user));
     }
 
     @Override
     public Stream<UserModel> searchForUserStream(RealmModel realm, String search, Integer firstResult, Integer maxResults) {
-        return searchForUserStream(realm, search);
+        return client.getUsers("*".equals(search) ? null : search, firstResult, maxResults)
+            .stream()
+            .map(user -> new UserAdapter(session, realm, model, user));
     }
 
     @Override
     public Stream<UserModel> searchForUserStream(RealmModel realm, Map<String, String> params, Integer firstResult, Integer maxResults) {
-        return repository.getAllUsers().stream()
-                .map(user -> new UserAdapter(session, realm, model, user));
+        return client.getUsers(null)
+            .stream()
+            .map(user -> new UserAdapter(session, realm, model, user));
     }
 
     @Override
