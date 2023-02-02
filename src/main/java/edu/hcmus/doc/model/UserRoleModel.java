@@ -1,14 +1,18 @@
-package edu.hcmus.doc;
+package edu.hcmus.doc.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.RoleContainerModel;
 import org.keycloak.models.RoleModel;
+import org.keycloak.storage.ReadOnlyException;
 
 public class UserRoleModel implements RoleModel {
 
+    private static final String READ_ONLY = "User role is read only";
+    
     private String name;
     private final RealmModel realm;
 
@@ -29,12 +33,12 @@ public class UserRoleModel implements RoleModel {
 
     @Override
     public void setDescription(String description) {
-
+        throw new ReadOnlyException(READ_ONLY);
     }
 
     @Override
     public String getId() {
-        return name;
+        return getName();
     }
 
     @Override
@@ -49,12 +53,12 @@ public class UserRoleModel implements RoleModel {
 
     @Override
     public void addCompositeRole(RoleModel role) {
-
+        throw new ReadOnlyException(READ_ONLY);
     }
 
     @Override
     public void removeCompositeRole(RoleModel role) {
-
+        throw new ReadOnlyException(READ_ONLY);
     }
 
     @Override
@@ -89,17 +93,17 @@ public class UserRoleModel implements RoleModel {
 
     @Override
     public void setSingleAttribute(String name, String value) {
-
+        throw new ReadOnlyException(READ_ONLY);
     }
 
     @Override
     public void setAttribute(String name, List<String> values) {
-
+        throw new ReadOnlyException(READ_ONLY);
     }
 
     @Override
     public void removeAttribute(String name) {
-
+        throw new ReadOnlyException(READ_ONLY);
     }
 
     @Override
@@ -109,6 +113,6 @@ public class UserRoleModel implements RoleModel {
 
     @Override
     public Map<String, List<String>> getAttributes() {
-        return null;
+        return Collections.emptyMap();
     }
 }

@@ -1,5 +1,6 @@
 package edu.hcmus.doc;
 
+import edu.hcmus.doc.model.UserAdapter;
 import edu.hcmus.doc.service.DocClientSimpleHttp;
 import edu.hcmus.doc.service.DocUserClient;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class DocUserStorageProvider implements
     public DocUserStorageProvider(KeycloakSession session, ComponentModel model) {
         this.session = session;
         this.model = model;
-        this.client = new DocClientSimpleHttp(session);
+        this.client = new DocClientSimpleHttp(session, model);
     }
 
     @Override
@@ -91,9 +92,7 @@ public class DocUserStorageProvider implements
 
     @Override
     public Stream<UserModel> searchForUserStream(RealmModel realm, String search, Integer firstResult, Integer maxResults) {
-        return client.getUsers("*".equals(search) ? null : search, firstResult, maxResults)
-            .stream()
-            .map(user -> new UserAdapter(session, realm, model, user));
+        return searchForUserStream(realm, search);
     }
 
     @Override
