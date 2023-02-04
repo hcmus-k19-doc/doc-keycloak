@@ -1,4 +1,4 @@
-package edu.hcmus.doc.model;
+package edu.hcmus.doc.model.enums;
 
 import lombok.AllArgsConstructor;
 

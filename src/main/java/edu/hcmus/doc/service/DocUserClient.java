@@ -2,6 +2,7 @@ package edu.hcmus.doc.service;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import edu.hcmus.doc.model.dto.CredentialsDto;
 import edu.hcmus.doc.model.DocUser;
 import java.util.List;
 import java.util.Optional;
@@ -42,5 +43,5 @@ public interface DocUserClient {
   @GET
   @Path("/{id}/auth/validate-credentials")
   @Produces(MediaType.APPLICATION_FORM_URLENCODED)
-  boolean validateCredentialsByUserId(String id, @PathParam("id") String password);
+  boolean validateCredentialsByUserId(@PathParam("id") String id, CredentialsDto credentialsDto);
 }

@@ -1,5 +1,6 @@
 package edu.hcmus.doc.model;
 
+import edu.hcmus.doc.model.enums.DocRole;
 import java.util.Set;
 import lombok.Data;
 

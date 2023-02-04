@@ -1,8 +1,11 @@
 package edu.hcmus.doc;
 
 import edu.hcmus.doc.model.UserAdapter;
-import edu.hcmus.doc.service.DocClientSimpleHttp;
+import edu.hcmus.doc.model.dto.CredentialsDto;
+import edu.hcmus.doc.service.CacheService;
 import edu.hcmus.doc.service.DocUserClient;
+import edu.hcmus.doc.service.impl.CacheServiceImpl;
+import edu.hcmus.doc.service.impl.DocClientSimpleHttp;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.keycloak.component.ComponentModel;
@@ -28,11 +31,13 @@ public class DocUserStorageProvider implements
     private final KeycloakSession session;
     private final ComponentModel model;
     private final DocUserClient client;
+    private final CacheService cacheService;
 
     public DocUserStorageProvider(KeycloakSession session, ComponentModel model) {
         this.session = session;
         this.model = model;
         this.client = new DocClientSimpleHttp(session, model);
+        this.cacheService = new CacheServiceImpl(client, session, model);
     }
 
     @Override
@@ -51,7 +56,9 @@ public class DocUserStorageProvider implements
             return false;
         }
         UserCredentialModel cred = (UserCredentialModel) input;
-        return client.validateCredentialsByUserId(StorageId.externalId(user.getId()), cred.getChallengeResponse());
+        CredentialsDto credentialsDto = new CredentialsDto();
+        credentialsDto.setPassword(cred.getChallengeResponse());
+        return client.validateCredentialsByUserId(StorageId.externalId(user.getId()), credentialsDto);
     }
 
     @Override
@@ -59,23 +66,33 @@ public class DocUserStorageProvider implements
 
     @Override
     public UserModel getUserById(RealmModel realm, String id) {
-        return client.getUserById(StorageId.externalId(id))
-            .map(user -> new UserAdapter(session, realm, model, user))
-            .orElse(null);
+        return cacheService.getUserById(realm, StorageId.externalId(id));
     }
 
     @Override
     public UserModel getUserByUsername(RealmModel realm, String username) {
-        return client.getUserByUsername(username)
+        UserAdapter userAdapter = client.getUserByUsername(username)
             .map(user -> new UserAdapter(session, realm, model, user))
             .orElse(null);
+
+        if (userAdapter != null) {
+            cacheService.cacheUser(StorageId.externalId(userAdapter.getId()), userAdapter);
+        }
+
+        return userAdapter;
     }
 
     @Override
     public UserModel getUserByEmail(RealmModel realm, String email) {
-        return client.getUserByEmail(email)
+        UserAdapter userAdapter = client.getUserByEmail(email)
             .map(user -> new UserAdapter(session, realm, model, user))
             .orElse(null);
+
+        if (userAdapter != null) {
+            cacheService.cacheUser(StorageId.externalId(userAdapter.getId()), userAdapter);
+        }
+
+        return userAdapter;
     }
 
     @Override

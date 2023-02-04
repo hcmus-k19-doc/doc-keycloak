@@ -1,9 +1,10 @@
-package edu.hcmus.doc.service;
+package edu.hcmus.doc.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import edu.hcmus.doc.common.Constants;
-import edu.hcmus.doc.model.CredentialsDto;
+import edu.hcmus.doc.model.dto.CredentialsDto;
 import edu.hcmus.doc.model.DocUser;
+import edu.hcmus.doc.service.DocUserClient;
 import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
@@ -81,9 +82,7 @@ public class DocClientSimpleHttp implements DocUserClient {
 
   @SneakyThrows
   @Override
-  public boolean validateCredentialsByUserId(String id, String password) {
-    CredentialsDto credentialsDto = new CredentialsDto();
-    credentialsDto.setPassword(password);
+  public boolean validateCredentialsByUserId(String id, CredentialsDto credentialsDto) {
     String url = String.format("%s/%s/%s", baseUrl, id, "auth/validate-credentials");
     SimpleHttp http = SimpleHttp
         .doPost(url, httpClient)

@@ -1,4 +1,4 @@
-package edu.hcmus.doc.model;
+package edu.hcmus.doc.model.dto;
 
 import lombok.Data;
 
