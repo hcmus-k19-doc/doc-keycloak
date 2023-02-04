@@ -1,8 +1,8 @@
-package edu.hcmus.doc;
+package edu.hcmus.doc.model;
 
-import edu.hcmus.doc.model.DocUser;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,7 +29,7 @@ public class UserAdapter extends AbstractUserAdapter {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return user.getUsername();
     }
 
     @Override
@@ -54,17 +54,36 @@ public class UserAdapter extends AbstractUserAdapter {
 
     @Override
     public Stream<String> getAttributeStream(String name) {
-        if (name.equals(UserModel.USERNAME)) {
-            return Stream.of(getUsername());
-        }
-        return Stream.empty();
+        return UserModel.USERNAME.equals(name) ? Stream.of(getUsername()) : Stream.empty();
     }
 
     @Override
     protected Set<RoleModel> getRoleMappingsInternal() {
-        if (user.getRoles() != null) {
-            return user.getRoles().stream().map(roleName -> new UserRoleModel(roleName.value, realm)).collect(Collectors.toSet());
+        return user.getRoles() == null
+            ? Set.of()
+            : user.getRoles()
+                .stream()
+                .map(roleName -> new UserRoleModel(roleName.value, realm))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-        return Set.of();
+        if (!(o instanceof UserAdapter)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        UserAdapter that = (UserAdapter) o;
+        return Objects.equals(user, that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), user);
     }
 }
