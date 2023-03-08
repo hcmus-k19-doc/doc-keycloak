@@ -63,7 +63,7 @@ public class UserAdapter extends AbstractUserAdapter {
             ? Set.of()
             : user.getRoles()
                 .stream()
-                .map(roleName -> new UserRoleModel(roleName.value, realm))
+                .map(roleName -> new UserRoleModel(roleName, realm))
                 .collect(Collectors.toSet());
     }
 
