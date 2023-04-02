@@ -11,5 +11,6 @@ public class DocUser {
     private String id;
     private String username;
     private String email;
+    private String fullName;
     private Set<String> roles;
 }

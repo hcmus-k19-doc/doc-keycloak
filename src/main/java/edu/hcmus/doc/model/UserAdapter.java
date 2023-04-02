@@ -21,6 +21,8 @@ public class UserAdapter extends AbstractUserAdapter {
 
     private final DocUser user;
 
+    private static final String FULL_NAME = "fullName";
+
     public UserAdapter(KeycloakSession session, RealmModel realm, ComponentModel model, DocUser user) {
         super(session, realm, model);
         this.storageId = new StorageId(storageProviderModel.getId(), user.getId());
@@ -47,6 +49,7 @@ public class UserAdapter extends AbstractUserAdapter {
         MultivaluedHashMap<String, String> attributes = new MultivaluedHashMap<>();
         attributes.add(UserModel.USERNAME, getUsername());
         attributes.add(UserModel.EMAIL, getEmail());
+        attributes.add(FULL_NAME, user.getFullName());
         attributes.add(UserModel.FIRST_NAME, getFirstName());
         attributes.add(UserModel.LAST_NAME, getLastName());
         return attributes;
