@@ -6,7 +6,7 @@
 
     <groupId>edu.hcmus</groupId>
     <artifactId>doc-user-provider</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
     <properties>
         <keycloak.version>20.0.0</keycloak.version>

@@ -1,7 +1,6 @@
 package edu.hcmus.doc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -12,5 +11,5 @@ public class DocUser {
     private String username;
     private String email;
     private String fullName;
-    private Set<String> roles;
+    private String role;
 }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.keycloak.common.util.MultivaluedHashMap;
 import org.keycloak.component.ComponentModel;
@@ -62,12 +61,9 @@ public class UserAdapter extends AbstractUserAdapter {
 
     @Override
     protected Set<RoleModel> getRoleMappingsInternal() {
-        return user.getRoles() == null
+        return user.getRole() == null
             ? Set.of()
-            : user.getRoles()
-                .stream()
-                .map(roleName -> new UserRoleModel(roleName, realm))
-                .collect(Collectors.toSet());
+            : Set.of(new UserRoleModel(user.getRole(), realm));
     }
 
     @Override
