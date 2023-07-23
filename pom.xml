@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.hcmus</groupId>
-    <artifactId>doc-user-provider</artifactId>
+    <groupId>edu.hcmus.doc.keycloak</groupId>
+    <artifactId>prj-doc-user-provider</artifactId>
     <version>1.0.4</version>
 
     <properties>
